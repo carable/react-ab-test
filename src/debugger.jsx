@@ -87,6 +87,9 @@ if(process.env.NODE_ENV === "production" || !canUseDOM) {
         experiments: emitter.getActiveExperiments(),
         visible: false
       }
+
+      this.toggleVisibility = this.toggleVisibility.bind(this)
+      this.updateExperiments = this.updateExperiments.bind(this)
     }
     toggleVisibility() {
       this.setState({
@@ -136,7 +139,7 @@ if(process.env.NODE_ENV === "production" || !canUseDOM) {
           <div className="pushtell-production-build-note">This panel is hidden on production builds.</div>
         </div>;
       } else if(experimentNames.length > 0){
-        return <div className="pushtell-container pushtell-handle" onClick={this.toggleVisibility.bind(this)}>
+        return <div className="pushtell-container pushtell-handle" onClick={this.toggleVisibility}>
           {experimentNames.length} Active Experiment{experimentNames.length > 1 ? "s" : ""}
         </div>;
       } else {
