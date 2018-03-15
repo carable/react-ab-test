@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import emitter from "./emitter";
 import {canUseDOM} from 'fbjs/lib/ExecutionEnvironment';
@@ -78,35 +78,37 @@ if(process.env.NODE_ENV === "production" || !canUseDOM) {
       style = null;
     }
   }
-  const Debugger = React.createClass({
-    displayName: "Pushtell.Debugger",
-    getInitialState(){
-      return {
+  class Debugger extends Component {
+    static displayName = "Pushtell.Debugger";
+    constructor(props) {
+      super(props);
+
+      this.state = {
         experiments: emitter.getActiveExperiments(),
         visible: false
-      };
-    },
+      }
+    }
     toggleVisibility() {
       this.setState({
         visible: !this.state.visible
       });
-    },
+    }
     updateExperiments(){
       this.setState({
         experiments: emitter.getActiveExperiments()
       });
-    },
+    }
     setActiveVariant(experimentName, variantName) {
       emitter.setActiveVariant(experimentName, variantName);
-    },
+    }
     componentWillMount(){
       this.activeSubscription = emitter.addListener("active", this.updateExperiments);
       this.inactiveSubscription = emitter.addListener("inactive", this.updateExperiments);
-    },
+    }
     componentWillUnmount(){
       this.activeSubscription.remove();
       this.inactiveSubscription.remove();
-    },
+    }
     render(){
       var experimentNames = Object.keys(this.state.experiments);
       if(this.state.visible) {
@@ -134,14 +136,14 @@ if(process.env.NODE_ENV === "production" || !canUseDOM) {
           <div className="pushtell-production-build-note">This panel is hidden on production builds.</div>
         </div>;
       } else if(experimentNames.length > 0){
-        return <div className="pushtell-container pushtell-handle" onClick={this.toggleVisibility}>
+        return <div className="pushtell-container pushtell-handle" onClick={this.toggleVisibility.bind(this)}>
           {experimentNames.length} Active Experiment{experimentNames.length > 1 ? "s" : ""}
         </div>;
       } else {
         return null;
       }
     }
-  });
+  };
 
   module.exports = {
     enable() {
