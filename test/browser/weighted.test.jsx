@@ -63,15 +63,13 @@ describe("Weighted Experiment", function() {
     const weightSum = variantWeights.reduce(add, 0);
     emitter.defineVariants(experimentName, variantNames, variantWeights);
     assert.equal(emitter.getSortedVariantWeights(experimentName).reduce(add, 0), weightSum);
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName}>
-          {variantNames.map(name => {
-            return <Variant key={name} name={name}><div id={'variant-' + name}></div></Variant>
-          })}
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName}>
+        {variantNames.map(name => {
+          return <Variant key={name} name={name}><div id={'variant-' + name}></div></Variant>
+        })}
+      </Experiment>;
+    };
     let chosenVariant;
     emitter.addListener("play", function(experimentName, variantName){
       playCount[variantName] = playCount[variantName] || 0;

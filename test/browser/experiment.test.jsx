@@ -52,15 +52,13 @@ describe("Experiment", function() {
     for(let i = 0; i < 100; i++) {
       variantNames.push(UUID.v4());
     }
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName}>
-          {variantNames.map(name => {
-            return <Variant key={name} name={name}><div id={'variant-' + name}></div></Variant>
-          })}
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName}>
+        {variantNames.map(name => {
+          return <Variant key={name} name={name}><div id={'variant-' + name}></div></Variant>
+        })}
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -73,24 +71,20 @@ describe("Experiment", function() {
       variantNames.push(UUID.v4());
     }
     let defaultVariantName = variantNames[Math.floor(Math.random() * variantNames.length)];
-    let AppWithdefaultVariantName = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} defaultVariantName={defaultVariantName}>
-          {variantNames.map(name => {
-            return <Variant key={name} name={name}><div id={'variant-' + name}></div></Variant>
-          })}
-        </Experiment>;
-      }
-    });
-    let AppWithoutdefaultVariantName = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName}>
-          {variantNames.map(name => {
-            return <Variant key={name} name={name}><div id={'variant-' + name}></div></Variant>
-          })}
-        </Experiment>;
-      }
-    });
+    let AppWithdefaultVariantName = () => {
+      return <Experiment name={experimentName} defaultVariantName={defaultVariantName}>
+        {variantNames.map(name => {
+          return <Variant key={name} name={name}><div id={'variant-' + name}></div></Variant>
+        })}
+      </Experiment>;
+    };
+    let AppWithoutdefaultVariantName = () => {
+      return <Experiment name={experimentName}>
+        {variantNames.map(name => {
+          return <Variant key={name} name={name}><div id={'variant-' + name}></div></Variant>
+        })}
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<AppWithdefaultVariantName />, container, resolve);
     });
@@ -106,28 +100,28 @@ describe("Experiment", function() {
   }));
   it("should error if variants are added to a experiment after a variant was selected.", co.wrap(function *(){
     let experimentName = UUID.v4();
-    let AppPart1 = React.createClass({
-      onClickVariant: function(e){
+    class AppPart1 extends React.Component {
+      onClickVariant(e) {
         this.refs.experiment.win();
-      },
-      render: function(){
+      }
+      render() {
         return <Experiment ref="experiment" name={experimentName}>
           <Variant name="A"><a id="variant-a" href="#A">A</a></Variant>
           <Variant name="B"><a id="variant-b" href="#B">B</a></Variant>
         </Experiment>;
       }
-    });
-    let AppPart2 = React.createClass({
-      onClickVariant: function(e){
+    };
+    class AppPart2 extends React.Component {
+      onClickVariant(e) {
         this.refs.experiment.win();
-      },
-      render: function(){
+      }
+      render() {
         return <Experiment ref="experiment" name={experimentName}>
           <Variant name="C"><a id="variant-c" href="#C">C</a></Variant>
           <Variant name="D"><a id="variant-d" href="#D">D</a></Variant>
         </Experiment>;
       }
-    });
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<AppPart1 />, container, resolve);
     });
@@ -148,28 +142,28 @@ describe("Experiment", function() {
   it("should not error if variants are added to a experiment after a variant was selected if variants were defined.", co.wrap(function *(){
     let experimentName = UUID.v4();
     emitter.defineVariants(experimentName, ["A", "B", "C", "D"]);
-    let AppPart1 = React.createClass({
-      onClickVariant: function(e){
+    class AppPart1 extends React.Component {
+      onClickVariant(e) {
         this.refs.experiment.win();
-      },
-      render: function(){
+      }
+      render() {
         return <Experiment ref="experiment" name={experimentName}>
           <Variant name="A"><a id="variant-a" href="#A">A</a></Variant>
           <Variant name="B"><a id="variant-b" href="#B">B</a></Variant>
         </Experiment>;
       }
-    });
-    let AppPart2 = React.createClass({
-      onClickVariant: function(e){
+    };
+    class AppPart2 extends React.Component {
+      onClickVariant(e) {
         this.refs.experiment.win();
-      },
-      render: function(){
+      }
+      render() {
         return <Experiment ref="experiment" name={experimentName}>
           <Variant name="C"><a id="variant-c" href="#C">C</a></Variant>
           <Variant name="D"><a id="variant-d" href="#D">D</a></Variant>
         </Experiment>;
       }
-    });
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<AppPart1 />, container, resolve);
     });
@@ -182,28 +176,28 @@ describe("Experiment", function() {
   it("should error if a variant is added to an experiment after variants were defined.", co.wrap(function *(){
     let experimentName = UUID.v4();
     emitter.defineVariants(experimentName, ["A", "B", "C"]);
-    let AppPart1 = React.createClass({
-      onClickVariant: function(e){
+    class AppPart1 extends React.Component {
+      onClickVariant(e) {
         this.refs.experiment.win();
-      },
-      render: function(){
+      }
+      render() {
         return <Experiment ref="experiment" name={experimentName}>
           <Variant name="A"><a id="variant-a" href="#A">A</a></Variant>
           <Variant name="B"><a id="variant-b" href="#B">B</a></Variant>
         </Experiment>;
       }
-    });
-    let AppPart2 = React.createClass({
-      onClickVariant: function(e){
+    };
+    class AppPart2 extends React.Component {
+      onClickVariant(e) {
         this.refs.experiment.win();
-      },
-      render: function(){
+      }
+      render() {
         return <Experiment ref="experiment" name={experimentName}>
           <Variant name="C"><a id="variant-c" href="#C">C</a></Variant>
           <Variant name="D"><a id="variant-d" href="#D">D</a></Variant>
         </Experiment>;
       }
-    });
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<AppPart1 />, container, resolve);
     });
@@ -224,14 +218,12 @@ describe("Experiment", function() {
   it("should not error if an older test variant is set.", co.wrap(function *(){
     let experimentName = UUID.v4();
     localStorage.setItem("PUSHTELL-" + experimentName, "C");
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName}>
-          <Variant name="A"><a id="variant-a" href="#A" onClick={this.onClickVariant}>A</a></Variant>
-          <Variant name="B"><a id="variant-b" href="#B" onClick={this.onClickVariant}>B</a></Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName}>
+        <Variant name="A"><a id="variant-a" href="#A" onClick={this.onClickVariant}>A</a></Variant>
+        <Variant name="B"><a id="variant-b" href="#B" onClick={this.onClickVariant}>B</a></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -251,17 +243,17 @@ describe("Experiment", function() {
     };
     let winSubscription = emitter.addWinListener(experimentName, winCallback);
     let winSubscriptionGlobal = emitter.addWinListener(winCallbackGlobal);
-    let App = React.createClass({
-      onClickVariant: function(e){
+    class App extends React.Component {
+      onClickVariant(e) {
         this.refs.experiment.win();
-      },
-      render: function(){
+      }
+      render() {
         return <Experiment ref="experiment" name={experimentName} defaultVariantName="A">
-          <Variant name="A"><a id="variant-a" href="#A" onClick={this.onClickVariant}>A</a></Variant>
-          <Variant name="B"><a id="variant-b" href="#B" onClick={this.onClickVariant}>B</a></Variant>
+          <Variant name="A"><a id="variant-a" href="#A" onClick={this.onClickVariant.bind(this)}>A</a></Variant>
+          <Variant name="B"><a id="variant-b" href="#B" onClick={this.onClickVariant.bind(this)}>B</a></Variant>
         </Experiment>;
       }
-    });
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -281,15 +273,13 @@ describe("Experiment", function() {
     for(let i = 0; i < 100; i++) {
       variantNames.push(UUID.v4());
     }
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} userIdentifier={userIdentifier}>
-          {variantNames.map(name => {
-            return <Variant key={name} name={name}><div id={'variant-' + name}></div></Variant>
-          })}
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} userIdentifier={userIdentifier}>
+        {variantNames.map(name => {
+          return <Variant key={name} name={name}><div id={'variant-' + name}></div></Variant>
+        })}
+      </Experiment>;
+    };
     let chosenVariant;
     emitter.once("play", function(experimentName, variantName){
       chosenVariant = variantName;

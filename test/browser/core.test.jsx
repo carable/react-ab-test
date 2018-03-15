@@ -22,14 +22,12 @@ describe("Core Experiment", function() {
   });
   it("should render the correct variant.", co.wrap(function *(){
     let experimentName = UUID.v4();
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A"><div id="variant-a" /></Variant>
-          <Variant name="B"><div id="variant-b" /></Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><div id="variant-a" /></Variant>
+        <Variant name="B"><div id="variant-b" /></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -41,14 +39,12 @@ describe("Core Experiment", function() {
   }));
   it("should error if invalid children exist.", co.wrap(function *(){
     let experimentName = UUID.v4();
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A"><div id="variant-a" /></Variant>
-          <div />
-        </Experiment>;
-      }
-    });
+    const App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><div id="variant-a" /></Variant>
+        <div />
+      </Experiment>;
+    };
     try {
       yield new Promise(function(resolve, reject){
         ReactDOM.render(<App />, container, resolve);
@@ -61,7 +57,7 @@ describe("Core Experiment", function() {
       return;
     }
     throw new Error("Experiment has invalid children.");
-  })); 
+  }));
   it("should update on componentWillReceiveProps.", co.wrap(function *(){
     let experimentName = UUID.v4();
     let setState;
@@ -71,22 +67,26 @@ describe("Core Experiment", function() {
     let getValueB = function() {
       return "B";
     }
-    let App = React.createClass({
-      getInitialState: function(){
-        return {
+
+    class App extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           value: getValueA
-        }
-      },
-      componentWillMount: function(){
-        setState = this.setState.bind(this);
-      },
-      render: function(){
-        return <Experiment name={experimentName} value={this.state.value}>
-          <Variant name="A"><div id="variant-a" /></Variant>
-          <Variant name="B"><div id="variant-b" /></Variant>
-        </Experiment>;
+        };
+
+        setState = this.setState.bind(this)
       }
-    });
+      render() {
+        return (
+          <Experiment name={experimentName} value={this.state.value}>
+            <Variant name="A"><div id="variant-a" /></Variant>
+            <Variant name="B"><div id="variant-b" /></Variant>
+          </Experiment>
+        );
+      }
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -105,23 +105,19 @@ describe("Core Experiment", function() {
   }));
   it("should update the children when props change.", co.wrap(function *(){
     let experimentName = UUID.v4();
-    let SubComponent = React.createClass({
-      render(){
-        return (
-            <div id="variant-a">
-              <span id="variant-a-text">{this.props.text}</span>
-            </div>
-        )
-      }
-    });
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A"><SubComponent text={this.props.text}/></Variant>
-          <Variant name="B"><div id="variant-b" /></Variant>
-        </Experiment>;
-      }
-    });
+    let SubComponent = (props) => {
+      return (
+          <div id="variant-a">
+            <span id="variant-a-text">{props.text}</span>
+          </div>
+      )
+    };
+    let App = (props) => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><SubComponent text={props.text}/></Variant>
+        <Variant name="B"><div id="variant-b" /></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       let component = ReactDOM.render(<App text='original text'/>,container, resolve);
     });

@@ -1,4 +1,4 @@
-var React = require('react');
+var React, { Component } = require('react');
 var ReactDOM = require('react-dom');
 var Experiment = require("../../lib/Experiment");
 var Variant = require("../../lib/Variant");
@@ -6,7 +6,7 @@ var experimentDebugger = require("../../lib/debugger");
 
 experimentDebugger.enable();
 
-var App = React.createClass({
+class App extends Component {
   render() {
     return <div>
       <h1>Experiment 1</h1>
@@ -29,8 +29,6 @@ var App = React.createClass({
       </Experiment>
     </div>;
   }
-});
+};
 
 ReactDOM.render(<App/>, document.getElementById('react'));
-
-

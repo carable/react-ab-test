@@ -24,14 +24,12 @@ describe("Variant", function() {
     let experimentName = UUID.v4();
     let variantTextA = UUID.v4();
     let variantTextB = UUID.v4();
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A">{variantTextA}</Variant>
-          <Variant name="B">{variantTextB}</Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A">{variantTextA}</Variant>
+        <Variant name="B">{variantTextB}</Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -39,14 +37,12 @@ describe("Variant", function() {
   }));
   it("should render components.", co.wrap(function *(){
     let experimentName = UUID.v4();
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A"><div id="variant-a" /></Variant>
-          <Variant name="B"><div id="variant-b" /></Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><div id="variant-a" /></Variant>
+        <Variant name="B"><div id="variant-b" /></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -58,20 +54,18 @@ describe("Variant", function() {
   }));
   it("should render arrays of components.", co.wrap(function *(){
     let experimentName = UUID.v4();
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A">
-            <div id="variant-a" />
-            <div />
-          </Variant>
-          <Variant name="B">
-            <div id="variant-b" />
-            <div />
-          </Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A">
+          <div id="variant-a" />
+          <div />
+        </Variant>
+        <Variant name="B">
+          <div id="variant-b" />
+          <div />
+        </Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -82,4 +76,3 @@ describe("Variant", function() {
     ReactDOM.unmountComponentAtNode(container);
   }));
 });
-

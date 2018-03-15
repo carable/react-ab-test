@@ -73,14 +73,12 @@ describe("Segment Helper", function() {
     }
     segmentHelper.enable();
     let experimentName = UUID.v4();
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A"><div id="variant-a" /></Variant>
-          <Variant name="B"><div id="variant-b" /></Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><div id="variant-a" /></Variant>
+        <Variant name="B"><div id="variant-b" /></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -94,4 +92,3 @@ describe("Segment Helper", function() {
     }
   }));
 });
-

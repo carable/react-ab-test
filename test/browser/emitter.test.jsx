@@ -38,14 +38,12 @@ describe("Emitter", function() {
     };
     let playSubscription = emitter.addPlayListener(experimentName, playCallback);
     let playSubscriptionGlobal = emitter.addPlayListener(playCallbackGlobal);
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A"><div id="variant-a"/></Variant>
-          <Variant name="B"><div id="variant-b"/></Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><div id="variant-a"/></Variant>
+        <Variant name="B"><div id="variant-b"/></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -70,14 +68,12 @@ describe("Emitter", function() {
     };
     let winSubscription = emitter.addWinListener(experimentName, winCallback);
     let winSubscriptionGlobal = emitter.addWinListener(winCallbackGlobal);
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A"><div id="variant-a"/></Variant>
-          <Variant name="B"><div id="variant-b"/></Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><div id="variant-a"/></Variant>
+        <Variant name="B"><div id="variant-b"/></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -103,17 +99,17 @@ describe("Emitter", function() {
     };
     let winSubscription = emitter.addWinListener(experimentName, winCallback);
     let winSubscriptionGlobal = emitter.addWinListener(winCallbackGlobal);
-    let App = React.createClass({
-      onClickVariant: function(e){
+    class App extends React.Component {
+      onClickVariant(e) {
         this.refs.experiment.win();
-      },
-      render: function(){
+      }
+      render() {
         return <Experiment ref="experiment" name={experimentName} value="A">
-          <Variant name="A"><a id="variant-a" href="#A" onClick={this.onClickVariant}>A</a></Variant>
-          <Variant name="B"><a id="variant-b" href="#B" onClick={this.onClickVariant}>B</a></Variant>
+          <Variant name="A"><a id="variant-a" href="#A" onClick={this.onClickVariant.bind(this)}>A</a></Variant>
+          <Variant name="B"><a id="variant-b" href="#B" onClick={this.onClickVariant.bind(this)}>B</a></Variant>
         </Experiment>;
       }
-    });
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -140,14 +136,12 @@ describe("Emitter", function() {
     };
     let activeVariantSubscription = emitter.addActiveVariantListener(experimentName, activeVariantCallback);
     let activeVariantSubscriptionGlobal = emitter.addActiveVariantListener(activeVariantCallbackGlobal);
-    let App = React.createClass({
-      render: function(){
-        return <Experiment ref="experiment" name={experimentName} value="A">
-          <Variant name="A"><a id="variant-a" href="#A">A</a></Variant>
-          <Variant name="B"><a id="variant-b" href="#B">B</a></Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><a id="variant-a" href="#A">A</a></Variant>
+        <Variant name="B"><a id="variant-b" href="#B">B</a></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -160,14 +154,12 @@ describe("Emitter", function() {
   }));
   it("should get the experiment value.", co.wrap(function *(){
     let experimentName = UUID.v4();
-    let App = React.createClass({
-      render: function(){
-        return <Experiment ref="experiment" name={experimentName} value="A">
-          <Variant name="A"><a id="variant-a" href="#A">A</a></Variant>
-          <Variant name="B"><a id="variant-b" href="#B">B</a></Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><a id="variant-a" href="#A">A</a></Variant>
+        <Variant name="B"><a id="variant-b" href="#B">B</a></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -176,14 +168,12 @@ describe("Emitter", function() {
   }));
   it("should update the rendered component.", co.wrap(function *(){
     let experimentName = UUID.v4();
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A"><div id="variant-a" /></Variant>
-          <Variant name="B"><div id="variant-b" /></Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><div id="variant-a" /></Variant>
+        <Variant name="B"><div id="variant-b" /></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -201,30 +191,24 @@ describe("Emitter", function() {
   it("should report active components.", co.wrap(function *(){
     let experimentNameA = UUID.v4();
     let experimentNameB = UUID.v4();
-    let AppA = React.createClass({
-      render: function(){
-        return <Experiment name={experimentNameA} value="A">
-          <Variant name="A"><div id="variant-a" /></Variant>
-          <Variant name="B"><div id="variant-b" /></Variant>
-        </Experiment>;
-      }
-    });
-    let AppB = React.createClass({
-      render: function(){
-        return <Experiment name={experimentNameB} value="C">
-          <Variant name="C"><div id="variant-c" /></Variant>
-          <Variant name="D"><div id="variant-d" /></Variant>
-        </Experiment>;
-      }
-    });
-    let AppCombined = React.createClass({
-      render: function(){
-        return <div>
-          <AppA />
-          <AppB />
-        </div>;
-      }
-    });
+    let AppA = () => {
+      return <Experiment name={experimentNameA} value="A">
+        <Variant name="A"><div id="variant-a" /></Variant>
+        <Variant name="B"><div id="variant-b" /></Variant>
+      </Experiment>;
+    };
+    let AppB = () => {
+      return <Experiment name={experimentNameB} value="C">
+        <Variant name="C"><div id="variant-c" /></Variant>
+        <Variant name="D"><div id="variant-d" /></Variant>
+      </Experiment>;
+    };
+    let AppCombined = () => {
+      return <div>
+        <AppA />
+        <AppB />
+      </div>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<AppA />, container, resolve);
     });
@@ -261,4 +245,3 @@ describe("Emitter", function() {
     ReactDOM.unmountComponentAtNode(container);
   }));
 });
-

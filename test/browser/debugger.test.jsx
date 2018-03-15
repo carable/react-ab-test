@@ -45,14 +45,12 @@ describe("Debugger", function() {
   });
   it("should enable and disable.", co.wrap(function *(){
     let experimentName = UUID.v4();
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A"><div id="variant-a" /></Variant>
-          <Variant name="B"><div id="variant-b" /></Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><div id="variant-a" /></Variant>
+        <Variant name="B"><div id="variant-b" /></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -72,14 +70,12 @@ describe("Debugger", function() {
   });
   it("should change an experiment's value.", co.wrap(function *(){
     let experimentName = UUID.v4();
-    let App = React.createClass({
-      render: function(){
-        return <Experiment name={experimentName} value="A">
-          <Variant name="A"><div id="variant-a" /></Variant>
-          <Variant name="B"><div id="variant-b" /></Variant>
-        </Experiment>;
-      }
-    });
+    let App = () => {
+      return <Experiment name={experimentName} value="A">
+        <Variant name="A"><div id="variant-a" /></Variant>
+        <Variant name="B"><div id="variant-b" /></Variant>
+      </Experiment>;
+    };
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
@@ -102,4 +98,3 @@ describe("Debugger", function() {
     ReactDOM.unmountComponentAtNode(container);
   }));
 });
-
