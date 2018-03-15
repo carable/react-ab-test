@@ -109,7 +109,7 @@ module.exports = function (karma) {
             loader: 'babel',
             query: {
               cacheDirectory: true,
-              presets: ["stage-1", "es2015", "react"]
+              presets: ["env", "react"]
             }
           }, {
             exclude: /(node_modules|lib|example)/,
